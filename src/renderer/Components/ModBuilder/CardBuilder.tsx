@@ -15,10 +15,8 @@ function CardBuilder() {
   const navigate = useNavigate();
   let { index } = useParams();
   const cardIndex = parseInt(index);
-  
   const { settings, updateSettings } = useSettings();
   const { modContext, updateModContext } = useModContext();
-
   const [name, setName] = useState(modContext.cards[cardIndex].cardName || '');
   const [description, setDescription] = useState(modContext.cards[cardIndex].cardDescription || '');
   const [artUrl, setArtUrl] = useState(modContext.cards[cardIndex].cardArtUrl || 'https://placehold.co/512x402/png');
@@ -50,7 +48,7 @@ function CardBuilder() {
     setColor(value);
   };
 
-  const handleStatChange = (index: number, stat: Stat, value: number, positive: boolean, simpleAmount: SimpleAmount) => { 
+  const handleStatChange = (index: number, stat: Stat, value: number, positive: boolean, simpleAmount: SimpleAmount) => {
     const newStats = [...stats];
     newStats[index] = { ...newStats[index], stat, value, positive, simpleAmount };
 
@@ -71,8 +69,7 @@ function CardBuilder() {
 
   const addStat = () => {
     const newStats = [...stats];
-
-    const statOptions: Stat[] = ['damage', 'health', 'reload', 'ammo', 'projectiles', 'bursts', 'timeBetweenBullets', 'attackSpeed', 'bounces', 'bulletSpeed'];
+    const statOptions: Stat[] = ['damage', 'health', 'reload', 'ammo', 'projectiles', 'bursts', 'timeBetweenBullets', 'attackSpeed', 'bounces', 'bulletSpeed', 'blocksamount', 'blockhealamount', 'blockcooldown', 'respawns', 'lifesteal', 'numberofjumps', 'slow', 'movementspeed', 'knockback', 'gravity', 'spread', 'projectilesize', 'ammoregeneration', 'size'];
     const availableStatOptions = statOptions.filter(o => !stats.map(s => s.stat).includes(o));
 
     if (availableStatOptions.length == 0) return;
@@ -84,11 +81,10 @@ function CardBuilder() {
       simpleAmount: 'notAssigned'
     });
     setStats(newStats);
-  }; 
+  };
 
   const removeStat = (index: number) => {
     const indexesToRemove = [ index ]
-
     const statChange = stats[index];
     for (let i = 0; i < stats.length; i++) {
       const otherStatInfo = getStatInfo(stats[i].stat);
@@ -119,7 +115,7 @@ function CardBuilder() {
     if (description == null || description == '') return false;
     if (stats == null || stats.length == 0) return false;
     if (artUrl == null || artUrl == '') return false;
-    
+
     // assert that there are no duplicate stats
     const distinctSet = new Set(stats.map(s => s.stat));
     if (distinctSet.size !== stats.length) return false;
@@ -159,7 +155,7 @@ function CardBuilder() {
   function statView(index: number, stat: StatChange) {
     const statInfo = getStatInfo(stat.stat);
     const isDuplicate = stats.filter(s => s.stat === stat.stat).length > 1;
-    const statOptions: Stat[] = ['damage', 'health', 'reload', 'ammo', 'projectiles', 'bursts', 'timeBetweenBullets', 'attackSpeed', 'bounces', 'bulletSpeed'];
+    const statOptions: Stat[] = ['damage', 'health', 'reload', 'ammo', 'projectiles', 'bursts', 'timeBetweenBullets', 'attackSpeed', 'bounces', 'bulletSpeed', 'blocksamount', 'blockhealamount', 'blockcooldown', 'respawns', 'lifesteal', 'numberofjumps', 'slow', 'movementspeed', 'knockback', 'gravity', 'spread', 'projectilesize', 'ammoregeneration', 'size'];
     const availableStatOptions = statOptions.filter(o => o === stat.stat || !stats.map(s => s.stat).includes(o))
     return (
       <Card style={{marginTop: '1em'}}>
@@ -208,16 +204,16 @@ function CardBuilder() {
         <FormGroup label="Description" labelFor="card-description">
           <TextArea aria-multiline={false} id='card-description' fill placeholder='Card Description' onChange={(e) => handleSetDescription(e.target.value)} value={description} />
         </FormGroup>
-        
+
         <FormGroup label="Rarity" labelFor="card-rarity">
           <HTMLSelect
             fill={true}
-            options={['Trinket', 'Common', 'Scarce', 'Uncommon', 'Exotic', 'Rare', 'Epic', 'Legendary', 'Mythical', 'Divine']}
+            options={['Trinket', 'Common', 'Scarce', 'Uncommon', 'Exotic', 'Rare', 'Epic', 'Legendary', 'Mythical', 'Divine', 'Unique', 'Exordium']}
             value={rarity}
             id="card-rarity"
             onChange={(e) => handleSetRarity(e.target.value as CardRarity)} />
         </FormGroup>
-          
+
         <FormGroup label="Color" labelFor="card-color">
           <HTMLSelect
             fill={true}

@@ -1,6 +1,6 @@
-type CardRarity = 'Trinket' | 'Common' | 'Scarce' | 'Uncommon' | 'Exotic' | 'Rare' | 'Epic' | 'Legendary' | 'Mythical' | 'Divine';
+type CardRarity = 'Trinket' | 'Common' | 'Scarce' | 'Uncommon' | 'Exotic' | 'Rare' | 'Epic' | 'Legendary' | 'Mythical' | 'Divine' | 'Unique' | 'Exordium';
 type CardColor = 'DestructiveRed' | 'FirepowerYellow' | 'DefensiveBlue' | 'TechWhite' | 'EvilPurple' | 'PoisonGreen' | 'NatureBrown' | 'ColdBlue' | 'MagicPink';
-type Stat = 'damage' | 'health' | 'reload' | 'ammo' | 'projectiles' | 'bursts' | 'timeBetweenBullets' | 'attackSpeed' | 'bounces' | 'bulletSpeed';
+type Stat = 'damage' | 'health' | 'reload' | 'ammo' | 'projectiles' | 'bursts' | 'timeBetweenBullets' | 'attackSpeed' | 'bounces' | 'bulletSpeed' | 'blocksamount' | 'blockhealamount' | 'blockcooldown' | 'respawns' | 'lifesteal' | 'numberofjumps' | 'slow' | 'movementspeed' | 'knockback' | 'gravity' | 'spread' | 'projectilesize' | 'ammoregeneration' | 'size';
 type SimpleAmount = 'notAssigned' | 'aLittleBitOf' | 'Some' | 'aLotOf' | 'aHugeAmountOf' | 'slightlyLower' | 'lower' | 'aLotLower' | 'slightlySmaller' | 'smaller';
 
 interface StatInfo {
@@ -23,7 +23,9 @@ const rarityColorValues: { [key: string]: string } = {
   'Epic': '#c60011',
   'Legendary': '#f7eb00',
   'Mythical': '#00c900',
-  'Divine': '#dbc47e'
+  'Divine': '#dbc47e',
+  'Unique': '#FFFFFF',
+  'Exordium': '#c7d100'
 }
 
 const cardColorValues = {
@@ -72,7 +74,7 @@ const statInfoConstraints: { [key: string]: StatInfo } = {
     integer: true,
     unit: '',
     min: -100,
-    max: 100,
+    max: 10000,
     requires: []
   },
   'projectiles': {
@@ -81,7 +83,7 @@ const statInfoConstraints: { [key: string]: StatInfo } = {
     integer: true,
     unit: '',
     min: 1,
-    max: 100,
+    max: 10000,
     requires: []
   },
   'bursts': {
@@ -90,7 +92,7 @@ const statInfoConstraints: { [key: string]: StatInfo } = {
     integer: true,
     unit: '',
     min: 1,
-    max: 100,
+    max: 10000,
     requires: ['timeBetweenBullets']
   },
   'timeBetweenBullets': {
@@ -117,7 +119,7 @@ const statInfoConstraints: { [key: string]: StatInfo } = {
     integer: true,
     unit: '',
     min: 1,
-    max: 100,
+    max: 10000,
     requires: []
   },
   'bulletSpeed': {
@@ -129,6 +131,132 @@ const statInfoConstraints: { [key: string]: StatInfo } = {
     max: 100,
     requires: []
   },
+  'blocksamount': {
+    displayName: 'Additional Blocks',
+    additive: true,
+    integer: true,
+    unit: '',
+    min: -100,
+    max: 100,
+    requires: []
+  },
+  'blockhealamount': {
+    displayName: 'Heal Amount',
+    additive: true,
+    integer: true,
+    unit: '',
+    min: -100,
+    max: 1000000,
+    requires: []
+  },
+  'blockcooldown': {
+    displayName: 'Block Cooldown',
+    additive: false,
+    integer: false,
+    unit: '%',
+    min: -100,
+    max: 100,
+    requires: []
+  },
+  'respawns': {
+    displayName: 'Respawns',
+    additive: true,
+    integer: true,
+    unit: '',
+    min: 1,
+    max: 10000,
+    requires: []
+  },
+  'lifesteal': {
+    displayName: 'Lifesteal',
+    additive: false,
+    integer: false,
+    unit: '%',
+    min: -100,
+    max: 100,
+    requires: []
+  },
+  'numberofjumps': {
+    displayName: 'Total Jumps',
+    additive: true,
+    integer: true,
+    unit: '',
+    min: 1,
+    max: 10000,
+    requires: []
+  },
+  'slow': {
+    displayName: 'Slow',
+    additive: false,
+    integer: false,
+    unit: '%',
+    min: -100,
+    max: 100,
+    requires: []
+  },
+  'movementspeed': {
+    displayName: 'Movement Speed',
+    additive: false,
+    integer: false,
+    unit: '%',
+    min: -100,
+    max: 100,
+    requires: []
+  },
+  'knockback': {
+    displayName: 'Knockback',
+    additive: false,
+    integer: false,
+    unit: '%',
+    min: -100,
+    max: 100,
+    requires: []
+  },
+  'gravity': {
+    displayName: 'Gravity',
+    additive: false,
+    integer: false,
+    unit: '%',
+    min: -100,
+    max: 100,
+    requires: []
+  },
+  'spread': {
+    displayName: 'Spread',
+    additive: false,
+    integer: false,
+    unit: '%',
+    min: -100,
+    max: 100,
+    requires: []
+  },
+  'projectilesize': {
+    displayName: 'Projectile Size',
+    additive: false,
+    integer: false,
+    unit: '%',
+    min: -100,
+    max: 100,
+    requires: []
+  },
+  'ammoregeneration': {
+    displayName: 'Ammo Regeneration',
+    additive: false,
+    integer: false,
+    unit: '%',
+    min: -100,
+    max: 100,
+    requires: []
+  },
+  'size': {
+    displayName: 'Size',
+    additive: false,
+    integer: false,
+    unit: '%',
+    min: -100,
+    max: 100,
+    requires: []
+  }
 }
 
 interface StatChange {
@@ -154,6 +282,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using ModsPlus;
+using ModdingUtils;
 using RarityLib.Utils;
 
 public class ${cardProps.cardName.replaceAll(' ', '')} : SimpleCard
@@ -176,16 +305,28 @@ ${cardProps.cardStats.map(statToInfo).join(',\n')}
     {
         Dictionary<string, Action<float>> actions = new Dictionary<string, Action<float>>
         {
-            { "damage",             (val) => { gun.damage = val;  } },
-            { "health",             (val) => { statModifiers.health = val; } },
-            { "reload",             (val) => { gun.reloadTime = val; } },
-            { "ammo",               (val) => { gun.ammo = (int)val; } },
-            { "projectiles",        (val) => { gun.numberOfProjectiles = Mathf.Max(1, (int)val); } },
-            { "bursts",             (val) => { gun.bursts = (int)val; } },
-            { "timeBetweenBullets", (val) => { gun.timeBetweenBullets = val; } },
-            { "attackSpeed",        (val) => { gun.attackSpeed = val; } },
-            { "bounces",            (val) => { gun.reflects = (int)val; } },
-            { "bulletSpeed",        (val) => { gun.projectileSpeed = val; } }
+            { "damage",                   (val) => { gun.damage = val;  } },
+            { "health",                   (val) => { statModifiers.health = val; } },
+            { "reload",                   (val) => { gun.reloadTime = val; } },
+            { "ammo",                     (val) => { gun.ammo = (int)val; } },
+            { "ammoregeneration",         (val) => { gun.ammoReg = val; } },
+            { "projectiles",              (val) => { gun.numberOfProjectiles = Mathf.Max(1, (int)val); } },
+            { "projectilesize",           (val) => { gun.projectileSize = val; } },
+            { "bursts",                   (val) => { gun.bursts = (int)val; } },
+            { "timeBetweenBullets",       (val) => { gun.timeBetweenBullets = val; } },
+            { "knockback",                (val) => { gun.knockback = val; } },
+            { "attackSpeed",              (val) => { gun.attackSpeed = val; } },
+            { "bounces",                  (val) => { gun.reflects = (int)val; } },
+            { "bulletSpeed",              (val) => { gun.projectileSpeed = val; } },
+            { "blocksamount",             (val) => { block.additionalBlocks = (int)val; } },
+            { "blockhealamount",          (val) => { block.healing = (int)val; } },
+            { "blockcooldown",            (val) => { block.cdMultiplier = val; } },
+            { "lifesteal",                (val) => { statModifiers.lifeSteal = val; } },
+            { "respawns",                 (val) => { statModifiers.respawns = (int)val; } },
+            { "numberofjumps",            (val) => { statModifiers.numberOfJumps = (int)val; } },
+            { "gravity",                  (val) => { statModifiers.gravity = val; } },
+            { "size",                     (val) => { statModifiers.sizeMultiplier = val; } },
+            { "movementspeed",            (val) => { statModifiers.movementSpeed = val; } }
         };
 ${ cardProps.cardStats.map(sc => statToInvocation(sc)).join('\n') }
     }

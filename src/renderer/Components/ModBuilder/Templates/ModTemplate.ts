@@ -10,6 +10,7 @@ using BepInEx.Configuration;
 using HarmonyLib;
 using UnboundLib;
 using UnboundLib.Cards;
+using RarityLib.Utils;
 using UnboundLib.Utils;
 using UnboundLib.Utils.UI;
 using UnboundLib.GameModes;
@@ -31,6 +32,7 @@ public class ${name}Plugin : BaseUnityPlugin
     void Awake()
     {
 ${ cardClasses.map(c => `        CardRegistry.RegisterCard<${c}>();`).join('\n') }
+      RarityLib.Utils.RarityUtils.AddRarity("Exordium", 0.003f, new Color32(199, 209, 130, 0), new Color32(0, 199, 209, 0));
     }
 
     void Start()
