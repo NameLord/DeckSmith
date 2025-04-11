@@ -384,6 +384,9 @@ using UnityEngine;
 using ModsPlus;
 using ModdingUtils;
 using RarityLib.Utils;
+using JARL.Armor;
+using JARL.Armor.Builtins;
+using JARL.Armor.Bases;
 
 public class ${cardProps.cardName.replaceAll(' ', '')} : SimpleCard
 {
@@ -441,13 +444,15 @@ ${cardProps.cardStats.map((sc) => statToInvocation(sc)).join('\n')}
             { "armorRegenCooldown", (val) => armor.ArmorRegenCooldownSeconds = val },
             { "regenCooldownSeconds", (val) => { armor.reactivateArmorType = ArmorReactivateType.Second; armor.reactivateArmorValue = val; } },
         };
-${cardProps.cardStats.map((sc) => statToInvocation(sc)).join('\n')}
+${cardProps.cardStats.map((sc) => statToInvocation(sc, true)).join('\n')}
     }
 }`.trim();
 }
 
-function statToInvocation(stat: StatChange) {
-  if (statInfoConstraints[stat.stat].addedCardEffect) {
+function statToInvocation(stat: StatChange, Added: boolean = false) {
+  if (!statInfoConstraints[stat.stat].addedCardEffect && Added) {
+    return '';
+  } else if (statInfoConstraints[stat.stat].addedCardEffect && !Added) {
     return '';
   }
   return `        actions["${stat.stat}"].Invoke(${stat.value}f);`;
