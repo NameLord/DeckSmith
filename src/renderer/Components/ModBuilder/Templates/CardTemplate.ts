@@ -1,263 +1,363 @@
-type CardRarity = 'Trinket' | 'Common' | 'Scarce' | 'Uncommon' | 'Exotic' | 'Rare' | 'Epic' | 'Legendary' | 'Mythical' | 'Divine' | 'Unique' | 'Exordium';
-type CardColor = 'DestructiveRed' | 'FirepowerYellow' | 'DefensiveBlue' | 'TechWhite' | 'EvilPurple' | 'PoisonGreen' | 'NatureBrown' | 'ColdBlue' | 'MagicPink';
-type Stat = 'damage' | 'health' | 'reload' | 'ammo' | 'projectiles' | 'bursts' | 'timeBetweenBullets' | 'attackSpeed' | 'bounces' | 'bulletSpeed' | 'blocksamount' | 'blockhealamount' | 'blockcooldown' | 'respawns' | 'lifesteal' | 'numberofjumps' | 'slow' | 'movementspeed' | 'knockback' | 'gravity' | 'spread' | 'projectilesize' | 'ammoregeneration' | 'size';
-type SimpleAmount = 'notAssigned' | 'aLittleBitOf' | 'Some' | 'aLotOf' | 'aHugeAmountOf' | 'slightlyLower' | 'lower' | 'aLotLower' | 'slightlySmaller' | 'smaller';
+type CardRarity =
+  | 'Trinket'
+  | 'Common'
+  | 'Scarce'
+  | 'Uncommon'
+  | 'Exotic'
+  | 'Rare'
+  | 'Epic'
+  | 'Legendary'
+  | 'Mythical'
+  | 'Divine'
+  | 'Unique'
+  | 'Exordium';
+type CardColor =
+  | 'DestructiveRed'
+  | 'FirepowerYellow'
+  | 'DefensiveBlue'
+  | 'TechWhite'
+  | 'EvilPurple'
+  | 'PoisonGreen'
+  | 'NatureBrown'
+  | 'ColdBlue'
+  | 'MagicPink';
+type Stat =
+  | 'damage'
+  | 'health'
+  | 'reload'
+  | 'ammo'
+  | 'projectiles'
+  | 'bursts'
+  | 'timeBetweenBullets'
+  | 'attackSpeed'
+  | 'bounces'
+  | 'bulletSpeed'
+  | 'blocksamount'
+  | 'blockhealamount'
+  | 'blockcooldown'
+  | 'respawns'
+  | 'lifesteal'
+  | 'numberofjumps'
+  | 'slow'
+  | 'movementspeed'
+  | 'knockback'
+  | 'gravity'
+  | 'spread'
+  | 'projectilesize'
+  | 'ammoregeneration'
+  | 'size'
+  | 'armorHealth' // Armor Stat Below
+  | 'armorRegen'
+  | 'regenCooldownSeconds'
+  | 'reactivateAfterSeconds';
+type SimpleAmount =
+  | 'notAssigned'
+  | 'aLittleBitOf'
+  | 'Some'
+  | 'aLotOf'
+  | 'aHugeAmountOf'
+  | 'slightlyLower'
+  | 'lower'
+  | 'aLotLower'
+  | 'slightlySmaller'
+  | 'smaller';
 
 interface StatInfo {
-  displayName: string
-  additive: boolean
-  integer: boolean
-  unit: string
-  min: number
-  max: number
-  requires: Stat[]
+  displayName: string;
+  additive: boolean;
+  integer: boolean;
+  unit: string;
+  min: number;
+  max: number;
+  requires: Stat[];
+  addedCardEffect?: boolean;
 }
 
 const rarityColorValues: { [key: string]: string } = {
-  'Trinket': '#aa9080',
-  'Common': '#000b20',
-  'Scarce': '#009035',
-  'Uncommon': '#009cc5',
-  'Exotic': '#0000dd',
-  'Rare': '#f000a3',
-  'Epic': '#c60011',
-  'Legendary': '#f7eb00',
-  'Mythical': '#00c900',
-  'Divine': '#dbc47e',
-  'Unique': '#FFFFFF',
-  'Exordium': '#c7d100'
-}
+  Trinket: '#aa9080',
+  Common: '#000b20',
+  Scarce: '#009035',
+  Uncommon: '#009cc5',
+  Exotic: '#0000dd',
+  Rare: '#f000a3',
+  Epic: '#c60011',
+  Legendary: '#f7eb00',
+  Mythical: '#00c900',
+  Divine: '#dbc47e',
+  Unique: '#FFFFFF',
+  Exordium: '#c7d100',
+};
 
 const cardColorValues = {
-  'DestructiveRed': 'rgb(80.19% 27.61% 27.61%)',
-  'FirepowerYellow': 'rgb(79.25% 73.38% 22.8%)',
-  'DefensiveBlue': 'rgb(31.37% 51.55% 81.96%)',
-  'TechWhite': 'white',
-  'EvilPurple': 'rgb(47.77% 31.37% 81.96%)',
-  'PoisonGreen': 'rgb(0% 57.55% 29.95%)',
-  'NatureBrown': 'rgb(57.12% 80.19% 12.48%)',
-  'ColdBlue': 'rgb(31.37% 73.69% 81.96%)',
-  'MagicPink': 'rgb(81.96% 31.37% 53.44%)'
-}
+  DestructiveRed: 'rgb(80.19% 27.61% 27.61%)',
+  FirepowerYellow: 'rgb(79.25% 73.38% 22.8%)',
+  DefensiveBlue: 'rgb(31.37% 51.55% 81.96%)',
+  TechWhite: 'white',
+  EvilPurple: 'rgb(47.77% 31.37% 81.96%)',
+  PoisonGreen: 'rgb(0% 57.55% 29.95%)',
+  NatureBrown: 'rgb(57.12% 80.19% 12.48%)',
+  ColdBlue: 'rgb(31.37% 73.69% 81.96%)',
+  MagicPink: 'rgb(81.96% 31.37% 53.44%)',
+};
 
 const statInfoConstraints: { [key: string]: StatInfo } = {
-  'damage': {
+  damage: {
     displayName: 'Damage',
     additive: false,
     integer: false,
     unit: '%',
     min: -100,
     max: 100,
-    requires: []
+    requires: [],
   },
-  'health': {
+  health: {
     displayName: 'Health',
     additive: false,
     integer: false,
     unit: '%',
     min: -100,
     max: 100,
-    requires: []
+    requires: [],
   },
-  'reload': {
+  reload: {
     displayName: 'Reload Time',
     additive: false,
     integer: false,
     unit: '%',
     min: -100,
     max: 100,
-    requires: []
+    requires: [],
   },
-  'ammo': {
+  ammo: {
     displayName: 'Ammunition',
     additive: true,
     integer: true,
     unit: '',
     min: -100,
     max: 10000,
-    requires: []
+    requires: [],
   },
-  'projectiles': {
+  projectiles: {
     displayName: 'Projectiles',
     additive: true,
     integer: true,
     unit: '',
     min: 1,
     max: 10000,
-    requires: []
+    requires: [],
   },
-  'bursts': {
+  bursts: {
     displayName: 'Bursts',
     additive: true,
     integer: true,
     unit: '',
     min: 1,
     max: 10000,
-    requires: ['timeBetweenBullets']
+    requires: ['timeBetweenBullets'],
   },
-  'timeBetweenBullets': {
+  timeBetweenBullets: {
     displayName: 'Time Between Bullets',
     additive: true,
     integer: false,
     unit: ' seconds',
     min: -100,
     max: 100,
-    requires: ['bursts']
+    requires: ['bursts'],
   },
-  'attackSpeed': {
+  attackSpeed: {
     displayName: 'Attack Speed',
     additive: false,
     integer: false,
     unit: '%',
     min: -100,
     max: 100,
-    requires: []
+    requires: [],
   },
-  'bounces': {
+  bounces: {
     displayName: 'Bounces',
     additive: true,
     integer: true,
     unit: '',
     min: 1,
     max: 10000,
-    requires: []
+    requires: [],
   },
-  'bulletSpeed': {
+  bulletSpeed: {
     displayName: 'Bullet Speed',
     additive: false,
     integer: false,
     unit: '%',
     min: -100,
     max: 100,
-    requires: []
+    requires: [],
   },
-  'blocksamount': {
+  blocksamount: {
     displayName: 'Additional Blocks',
     additive: true,
     integer: true,
     unit: '',
     min: -100,
     max: 100,
-    requires: []
+    requires: [],
   },
-  'blockhealamount': {
+  blockhealamount: {
     displayName: 'Heal Amount',
     additive: true,
     integer: true,
     unit: '',
     min: -100,
     max: 1000000,
-    requires: []
+    requires: [],
   },
-  'blockcooldown': {
+  blockcooldown: {
     displayName: 'Block Cooldown',
     additive: false,
     integer: false,
     unit: '%',
     min: -100,
     max: 100,
-    requires: []
+    requires: [],
   },
-  'respawns': {
+  respawns: {
     displayName: 'Respawns',
     additive: true,
     integer: true,
     unit: '',
     min: 1,
     max: 10000,
-    requires: []
+    requires: [],
   },
-  'lifesteal': {
+  lifesteal: {
     displayName: 'Lifesteal',
     additive: false,
     integer: false,
     unit: '%',
     min: -100,
     max: 100,
-    requires: []
+    requires: [],
   },
-  'numberofjumps': {
+  numberofjumps: {
     displayName: 'Total Jumps',
     additive: true,
     integer: true,
     unit: '',
     min: 1,
     max: 10000,
-    requires: []
+    requires: [],
   },
-  'slow': {
+  slow: {
     displayName: 'Slow',
     additive: false,
     integer: false,
     unit: '%',
     min: -100,
     max: 100,
-    requires: []
+    requires: [],
   },
-  'movementspeed': {
+  movementspeed: {
     displayName: 'Movement Speed',
     additive: false,
     integer: false,
     unit: '%',
     min: -100,
     max: 100,
-    requires: []
+    requires: [],
   },
-  'knockback': {
+  knockback: {
     displayName: 'Knockback',
     additive: false,
     integer: false,
     unit: '%',
     min: -100,
     max: 100,
-    requires: []
+    requires: [],
   },
-  'gravity': {
+  gravity: {
     displayName: 'Gravity',
     additive: false,
     integer: false,
     unit: '%',
     min: -100,
     max: 100,
-    requires: []
+    requires: [],
   },
-  'spread': {
+  spread: {
     displayName: 'Spread',
     additive: false,
     integer: false,
     unit: '%',
     min: -100,
     max: 100,
-    requires: []
+    requires: [],
   },
-  'projectilesize': {
+  projectilesize: {
     displayName: 'Projectile Size',
     additive: false,
     integer: false,
     unit: '%',
     min: -100,
     max: 100,
-    requires: []
+    requires: [],
   },
-  'ammoregeneration': {
+  ammoregeneration: {
     displayName: 'Ammo Regeneration',
     additive: false,
     integer: false,
     unit: '%',
     min: -100,
     max: 100,
-    requires: []
+    requires: [],
   },
-  'size': {
+  size: {
     displayName: 'Size',
     additive: false,
     integer: false,
     unit: '%',
     min: -100,
     max: 100,
-    requires: []
-  }
-}
+    requires: [],
+  },
+  armorHealth: {
+    displayName: 'Armor Health',
+    additive: true,
+    integer: false,
+    unit: '',
+    min: 0,
+    max: 1000000,
+    requires: [],
+    addedCardEffect: true,
+  },
+  armorRegen: {
+    displayName: 'Armor Regeneration',
+    additive: true,
+    integer: false,
+    unit: '',
+    min: 0,
+    max: 1000000,
+    requires: [],
+    addedCardEffect: true,
+  },
+  regenCooldownSeconds: {
+    displayName: 'Regen Cooldown',
+    additive: true,
+    integer: false,
+    unit: '',
+    min: 0,
+    max: 1000000,
+    requires: [],
+    addedCardEffect: true,
+  },
+  reactivateAfterSeconds: {
+    displayName: 'Reactivation Time',
+    additive: true,
+    integer: false,
+    unit: ' Seconds',
+    min: 0,
+    max: 1000000,
+    requires: [],
+    addedCardEffect: true,
+  },
+};
 
 interface StatChange {
   value: number;
@@ -267,12 +367,12 @@ interface StatChange {
 }
 
 interface CardProps {
-  cardName: string
-  cardArtUrl: string
-  cardDescription: string
-  cardRarity: CardRarity
-  cardColor: CardColor
-  cardStats: StatChange[]
+  cardName: string;
+  cardArtUrl: string;
+  cardDescription: string;
+  cardRarity: CardRarity;
+  cardColor: CardColor;
+  cardStats: StatChange[];
 }
 
 function buildCard(modName: string, cardProps: CardProps) {
@@ -294,7 +394,9 @@ public class ${cardProps.cardName.replaceAll(' ', '')} : SimpleCard
         ModName     = "${modName}",
         Rarity      = RarityUtils.GetRarity("${cardProps.cardRarity}"),
         Theme       = CardThemeColor.CardThemeColorType.${cardProps.cardColor},
-        Art         = DeckSmithUtil.Instance.GetArtFromUrl("${cardProps.cardArtUrl}"),
+        Art         = DeckSmithUtil.Instance.GetArtFromUrl("${
+          cardProps.cardArtUrl
+        }"),
         Stats = new CardInfoStat[]
         {
 ${cardProps.cardStats.map(statToInfo).join(',\n')}
@@ -328,25 +430,40 @@ ${cardProps.cardStats.map(statToInfo).join(',\n')}
             { "size",                     (val) => { statModifiers.sizeMultiplier = val; } },
             { "movementspeed",            (val) => { statModifiers.movementSpeed = val; } }
         };
-${ cardProps.cardStats.map(sc => statToInvocation(sc)).join('\n') }
+${cardProps.cardStats.map((sc) => statToInvocation(sc)).join('\n')}
+    }
+
+    protected override void Added(Player player, Gun gun, GunAmmo gunAmmo, CharacterData data, HealthHandler health, Gravity gravity, Block block, CharacterStatModifiers characterStats) {
+        ArmorBase armor = ArmorFramework.ArmorHandlers[player].GetArmorByType<DefaultArmor>();
+        Dictionary<string, Action<float>> actions = new Dictionary<string, Action<float>>() {
+            { "armorHealth", (val) => armor.MaxArmorValue = val },
+            { "armorRegen", (val) => armor.ArmorRegenerationRate = val },
+            { "armorRegenCooldown", (val) => armor.ArmorRegenCooldownSeconds = val },
+            { "regenCooldownSeconds", (val) => { armor.reactivateArmorType = ArmorReactivateType.Second; armor.reactivateArmorValue = val; } },
+        };
+${cardProps.cardStats.map((sc) => statToInvocation(sc)).join('\n')}
     }
 }`.trim();
 }
 
 function statToInvocation(stat: StatChange) {
+  if (statInfoConstraints[stat.stat].addedCardEffect) {
+    return '';
+  }
   return `        actions["${stat.stat}"].Invoke(${stat.value}f);`;
 }
 
 function statToInfo(stat: StatChange) {
-
   const statInfo = getStatInfo(stat.stat);
 
   var amountString: string;
   if (statInfo.additive) {
-    amountString = `${stat.value < 0 ? stat.value : `+${stat.value}`}${statInfo.unit}`
+    amountString = `${stat.value < 0 ? stat.value : `+${stat.value}`}${
+      statInfo.unit
+    }`;
   } else {
     const amountPercent = Math.floor((stat.value - 1) * 100);
-    amountString = `${amountPercent < 0 ? '' : '+'}${amountPercent}%`
+    amountString = `${amountPercent < 0 ? '' : '+'}${amountPercent}%`;
   }
 
   return `          new CardInfoStat()
@@ -371,5 +488,12 @@ function getCardColor(cardColor: CardColor) {
 }
 
 export default buildCard;
-export { getStatInfo, getRarityColor, getCardColor }
-export type { CardRarity, CardColor, SimpleAmount, StatChange, Stat, CardProps };
+export { getStatInfo, getRarityColor, getCardColor };
+export type {
+  CardRarity,
+  CardColor,
+  SimpleAmount,
+  StatChange,
+  Stat,
+  CardProps,
+};

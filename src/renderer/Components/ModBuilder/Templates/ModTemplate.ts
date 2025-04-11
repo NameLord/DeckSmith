@@ -1,5 +1,9 @@
-
-function buildMod(name: string, id: string, version: string, cardClasses: string[]) {
+function buildMod(
+  name: string,
+  id: string,
+  version: string,
+  cardClasses: string[],
+) {
   return `
 using System.Linq;
 using System.Collections;
@@ -31,7 +35,9 @@ public class ${name}Plugin : BaseUnityPlugin
 
     void Awake()
     {
-${ cardClasses.map(c => `        CardRegistry.RegisterCard<${c}>();`).join('\n') }
+${cardClasses
+  .map((c) => `        CardRegistry.RegisterCard<${c}>();`)
+  .join('\n')}
       RarityLib.Utils.RarityUtils.AddRarity("Exordium", 0.003f, new Color32(199, 209, 130, 0), new Color32(0, 199, 209, 0));
     }
 
