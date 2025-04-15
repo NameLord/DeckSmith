@@ -37,6 +37,7 @@ DeckSmith requires the .NET SDK to be installed and certain Unity assemblies and
 1. Download [ModsPlus](https://rounds.thunderstore.io/package/willis81808/ModsPlus/) and copy `ModsPlus.dll` to your `Libs` folder.
 1. Download [ModdingUtils](https://rounds.thunderstore.io/package/Pykess/ModdingUtils/) and copy `ModdingUtils.dll` to your `Libs` folder.
 1. Download [DeckSmithUtil](https://rounds.thunderstore.io/package/willis81808/DeckSmithUtil/) and copy `DeckSmithUtil.dll` to your `Libs` folder.
+1. Download [Jarl Library](https://thunderstore.io/c/rounds/p/AALUND13/JARL/) and copy `JARL.dll` to your `Libs` folder.
 1. Launch DeckSmith and configure your `Libs` folder path as the "Library Folder" under Mod Configuration
 1. Start creating!
 
