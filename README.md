@@ -16,7 +16,7 @@ cd DeckSmith
 npm install
 ```
 
-or install a prebuilt [release](https://github.com/willis81808/DeckSmith/releases).
+or install a prebuilt [release](https://github.com/NameLord/DeckSmith/releases).
 
 ## Setup
 
