@@ -10,32 +10,24 @@ function getManifest(modName: string, modVersion: string, shortModDescription: s
       'willis81808-UnboundLib-3.2.12',
       'willis81808-DeckSmithUtil-1.0.0',
       'willis81808-ModsPlus-1.6.2',
-      'CrazyCoders-RarityBundle-0.0.0'
+      'CrazyCoders-RarityBundle-0.0.0',
+      'AALUND13-JARL-2.6.3'
     ]
   }, null, 2);
 }
 
-function getReadme(modName: string, modDescription: string, cards: CardProps[]) {
+function getReadme(
+  modName: string,
+  modDescription: string,
+  cards: CardProps[],
+) {
   return `
-# ${ modName }
-### Created with [DeckSmith](https://rounds.thunderstore.io/package/willis81808/DeckSmith/)
-
-${ modDescription.replaceAll('`', '\\`').replaceAll('${', '\\${') }
-
-## Cards
-${ cards.map(cardToDescription).join('\n\n') }
+${modDescription.replaceAll('`', '\\`').replaceAll('${', '\\${')}
 `;
 }
 
 function cardToDescription(card: CardProps) {
   return `
-
-#### ${ card.cardName }
-
-${ card.cardDescription }
-
-${ card.cardStats.map(cardStatToList).join('\n') }
-
 `;
 }
 

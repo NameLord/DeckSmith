@@ -49,7 +49,8 @@ type Stat =
   | 'armorHealth' // Armor Stat Below
   | 'armorRegen'
   | 'regenCooldownSeconds'
-  | 'reactivateAfterSeconds';
+  | 'reactivateAfterSeconds'
+  | 'luck';
 type SimpleAmount =
   | 'notAssigned'
   | 'aLittleBitOf'
@@ -61,6 +62,7 @@ type SimpleAmount =
   | 'aLotLower'
   | 'slightlySmaller'
   | 'smaller';
+
 
 interface StatInfo {
   displayName: string;
@@ -342,7 +344,7 @@ const statInfoConstraints: { [key: string]: StatInfo } = {
     additive: true,
     integer: false,
     unit: '',
-    min: 0,
+    min: -1000000,
     max: 1000000,
     requires: [],
     addedCardEffect: true,
@@ -352,11 +354,21 @@ const statInfoConstraints: { [key: string]: StatInfo } = {
     additive: true,
     integer: false,
     unit: ' Seconds',
-    min: 0,
+    min: -1000000,
     max: 1000000,
     requires: [],
     addedCardEffect: true,
   },
+  luck: {
+    displayName: 'Luck',
+    additive: true,
+    integer: true,
+    unit: '',
+    min: -1000000,
+    max: 1000000,
+    requires: [],
+    addedCardEffect: false,
+  }
 };
 
 interface StatChange {
@@ -385,7 +397,7 @@ using ModsPlus;
 using ModdingUtils;
 using RarityLib.Utils;
 using JARL.Armor;
-using JARL.Armor.Builtins;
+using JARL.Armor.Builtin;
 using JARL.Armor.Bases;
 
 public class ${cardProps.cardName.replaceAll(' ', '')} : SimpleCard
@@ -410,28 +422,28 @@ ${cardProps.cardStats.map(statToInfo).join(',\n')}
     {
         Dictionary<string, Action<float>> actions = new Dictionary<string, Action<float>>
         {
-            { "damage",                   (val) => { gun.damage = val;  } },
-            { "health",                   (val) => { statModifiers.health = val; } },
-            { "reload",                   (val) => { gun.reloadTime = val; } },
-            { "ammo",                     (val) => { gun.ammo = (int)val; } },
-            { "ammoregeneration",         (val) => { gun.ammoReg = val; } },
-            { "projectiles",              (val) => { gun.numberOfProjectiles = Mathf.Max(1, (int)val); } },
-            { "projectilesize",           (val) => { gun.projectileSize = val; } },
-            { "bursts",                   (val) => { gun.bursts = (int)val; } },
-            { "timeBetweenBullets",       (val) => { gun.timeBetweenBullets = val; } },
-            { "knockback",                (val) => { gun.knockback = val; } },
-            { "attackSpeed",              (val) => { gun.attackSpeed = val; } },
-            { "bounces",                  (val) => { gun.reflects = (int)val; } },
-            { "bulletSpeed",              (val) => { gun.projectileSpeed = val; } },
-            { "blocksamount",             (val) => { block.additionalBlocks = (int)val; } },
-            { "blockhealamount",          (val) => { block.healing = (int)val; } },
-            { "blockcooldown",            (val) => { block.cdMultiplier = val; } },
-            { "lifesteal",                (val) => { statModifiers.lifeSteal = val; } },
-            { "respawns",                 (val) => { statModifiers.respawns = (int)val; } },
-            { "numberofjumps",            (val) => { statModifiers.numberOfJumps = (int)val; } },
-            { "gravity",                  (val) => { statModifiers.gravity = val; } },
-            { "size",                     (val) => { statModifiers.sizeMultiplier = val; } },
-            { "movementspeed",            (val) => { statModifiers.movementSpeed = val; } }
+            { "damage",                   (val) => { gun.damage = val;  } }, // the Damage on Bullets
+            { "health",                   (val) => { statModifiers.health = val; } }, // Max Health
+            { "reload",                   (val) => { gun.reloadTime = val; } }, // Reload Gun
+            { "ammo",                     (val) => { gun.ammo = (int)val; } }, // Max Ammo in Gun
+            { "ammoregeneration",         (val) => { gun.ammoReg = val; } }, // Ammo Regeneration
+            { "projectiles",              (val) => { gun.numberOfProjectiles = Mathf.Max(1, (int)val); } }, // Maximum of bullets it can shoot from 1 fire.
+            { "projectilesize",           (val) => { gun.projectileSize = val; } }, // the Bullet Size
+            { "bursts",                   (val) => { gun.bursts = (int)val; } }, // No words XD
+            { "timeBetweenBullets",       (val) => { gun.timeBetweenBullets = val; } }, // Self-explanatory ?
+            { "knockback",                (val) => { gun.knockback = val; } }, // Having more knockback pushes enemies more on hit
+            { "attackSpeed",              (val) => { gun.attackSpeed = val; } }, // No words XD
+            { "bounces",                  (val) => { gun.reflects = (int)val; } }, // more or equal than 1 bullets bounces
+            { "bulletSpeed",              (val) => { gun.projectileSpeed = val; } }, // the more bullet speed the faster it goes
+            { "blocksamount",             (val) => { block.additionalBlocks = (int)val; } }, // How many times its gonna block
+            { "blockhealamount",          (val) => { block.healing = (int)val; } }, // How much Heal on Block
+            { "blockcooldown",            (val) => { block.cdMultiplier = val; } }, // Cooldown on Block
+            { "lifesteal",                (val) => { statModifiers.lifeSteal = val; } }, // Steal health based on your damage & lifesteal
+            { "respawns",                 (val) => { statModifiers.respawns = (int)val; } }, // How many times you respawn
+            { "numberofjumps",            (val) => { statModifiers.numberOfJumps = (int)val; } }, // Total jumps before you run out.
+            { "gravity",                  (val) => { statModifiers.gravity = val; } }, // No words XD
+            { "size",                     (val) => { statModifiers.sizeMultiplier = val; } }, // Bigger boobs or smaller boobs ?
+            { "movementspeed",            (val) => { statModifiers.movementSpeed = val; } } // How fast do you want to go ? what about inverse kinematics ?
         };
 ${cardProps.cardStats.map((sc) => statToInvocation(sc)).join('\n')}
     }
@@ -439,11 +451,11 @@ ${cardProps.cardStats.map((sc) => statToInvocation(sc)).join('\n')}
     protected override void Added(Player player, Gun gun, GunAmmo gunAmmo, CharacterData data, HealthHandler health, Gravity gravity, Block block, CharacterStatModifiers characterStats) {
         ArmorBase armor = ArmorFramework.ArmorHandlers[player].GetArmorByType<DefaultArmor>();
         Dictionary<string, Action<float>> actions = new Dictionary<string, Action<float>>() {
-            { "armorHealth", (val) => armor.MaxArmorValue = val },
-            { "armorRegen", (val) => armor.ArmorRegenerationRate = val },
-            { "armorRegenCooldown", (val) => armor.ArmorRegenCooldownSeconds = val },
-            { "regenCooldownSeconds", (val) => { armor.reactivateArmorType = ArmorReactivateType.Second; armor.reactivateArmorValue = val; } },
-        };
+          { "armorHealth", (val) => armor.MaxArmorValue += (int)val },
+          { "armorRegen", (val) => armor.ArmorRegenerationRate += val },
+          { "regenCooldownSeconds", (val) => { if(armor.ArmorRegenCooldownSeconds < val) armor.ArmorRegenCooldownSeconds = val; } },
+          { "reactivateAfterSeconds", (val) => { armor.reactivateArmorType = ArmorReactivateType.Second; if(armor.reactivateArmorValue < val) armor.reactivateArmorValue = val; } },
+      };
 ${cardProps.cardStats.map((sc) => statToInvocation(sc, true)).join('\n')}
     }
 }`.trim();

@@ -149,6 +149,7 @@ function CardBuilder() {
       'armorRegen',
       'regenCooldownSeconds',
       'reactivateAfterSeconds',
+      'luck'
     ];
     const availableStatOptions = statOptions.filter(
       (o) => !stats.map((s) => s.stat).includes(o),
@@ -280,6 +281,7 @@ function CardBuilder() {
       'armorRegen',
       'regenCooldownSeconds',
       'reactivateAfterSeconds',
+      'luck'
     ];
     const availableStatOptions = statOptions.filter(
       (o) => o === stat.stat || !stats.map((s) => s.stat).includes(o),

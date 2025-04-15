@@ -23,6 +23,7 @@ using ModsPlus;
 
 [BepInDependency("com.willis.rounds.unbound")]
 [BepInDependency("com.willis.rounds.modsplus")]
+[BepInDependency("com.aalund13.rounds.jarl")]
 [BepInDependency("root.rarity.lib")]
 [BepInPlugin(ModId, ModName, ModVersion)]
 [BepInProcess("Rounds.exe")]
