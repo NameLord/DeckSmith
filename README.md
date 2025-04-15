@@ -11,7 +11,7 @@
 Clone the repo and install dependencies:
 
 ```bash
-git clone https://github.com/willis81808/DeckSmith.git
+git clone https://github.com/NameLord/DeckSmith.git
 cd DeckSmith
 npm install
 ```
